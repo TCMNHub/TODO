@@ -1,13 +1,19 @@
-import { type App, createApp } from "vue";
-import { createMVVM, MVVMApp } from "vue-mvvm";
+import {type App, createApp} from "vue";
+import {createMVVM} from "vue-mvvm";
 
-import { AppConfig } from "./config";
+import MVVMApp from "./App.vue";
+import {AppConfig} from "./config";
 import "./main.css";
 
 
 const app: App = createApp(MVVMApp)
+const config: AppConfig = new AppConfig(
+    "http://127.0.0.1:54321",
+    import.meta.env.ANON_KEY,
+    "app",
+    "http://localhost:5173");
 
-app.use(createMVVM(new AppConfig()));
+app.use(createMVVM(config));
 
-app.mount("#app");
+config.trySSO().then(() => app.mount("#app"));
 

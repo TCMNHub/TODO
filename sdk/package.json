@@ -1,0 +1,34 @@
+{
+    "name": "@tcmn-hub/todo",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "prepublishOnly": "npm run build",
+        "ver:major": "npm version major --no-git-tag-version",
+        "ver:minor": "npm version minor --no-git-tag-version",
+        "ver:patch": "npm version patch --no-git-tag-version"
+    },
+    "dependencies": {
+        "@supabase/supabase-js": "^2.98.0"
+    },
+    "peerDependencies": {
+        "@tcmn-hub/auth": "^1.1.0"
+    },
+    "devDependencies": {
+        "typescript": "~5.9.3"
+    },
+    "engines": {
+        "node": "^20.19.0 || >=22.12.0"
+    },
+    "publishConfig": {
+        "access": "restricted",
+        "registry": "https://npm.bytelab.studio"
+    }
+}

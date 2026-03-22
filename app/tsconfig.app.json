@@ -5,12 +5,15 @@
   "compilerOptions": {
     // Extra safety for array and object lookups, but may have false positives.
     "noUncheckedIndexedAccess": true,
+    "allowImportingTsExtensions": false,
 
     // Path mapping for cleaner imports.
     "paths": {
       "@view/*": ["./src/views/*"],
       "@control/*": ["./src/controls/*"],
-      "@icon/*": ["./src/icons/*"]
+      "@icon/*": ["./src/icons/*"],
+      "@service/*": ["./src/services/*"],
+      "@component/*": ["./src/components/*"]
     },
 
     // `vue-tsc --build` produces a .tsbuildinfo file for incremental type-checking.

@@ -16,7 +16,9 @@ export default defineConfig({
         alias: {
             "@view": fileURLToPath(new URL("./src/views", import.meta.url)),
             "@control": fileURLToPath(new URL("./src/controls", import.meta.url)),
-            "@icon": fileURLToPath(new URL("./src/icons", import.meta.url))
+            "@icon": fileURLToPath(new URL("./src/icons", import.meta.url)),
+            "@service": fileURLToPath(new URL("./src/services", import.meta.url)),
+            "@component": fileURLToPath(new URL("./src/components", import.meta.url))
         },
     },
 })
