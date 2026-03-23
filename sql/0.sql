@@ -17,7 +17,7 @@ CREATE TABLE app_todo.todos
 (
     todo_id          UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
     user_id     UUID        NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE,
-    project_id  UUID        NOT NULL REFERENCES app_todo.projects (id) ON DELETE CASCADE,
+    project_id  UUID        NOT NULL REFERENCES app_todo.projects (project_id) ON DELETE CASCADE,
     title       TEXT        NOT NULL,
     description TEXT,
     status      TEXT        NOT NULL DEFAULT 'todo',
@@ -38,8 +38,8 @@ CREATE TABLE app_todo.tags
 
 CREATE TABLE app_todo.todo_to_tags
 (
-    todo_id UUID NOT NULL REFERENCES app_todo.todos (id) ON DELETE CASCADE,
-    tag_id  UUID NOT NULL REFERENCES app_todo.tags (id) ON DELETE CASCADE,
+    todo_id UUID NOT NULL REFERENCES app_todo.todos (todo_id) ON DELETE CASCADE,
+    tag_id  UUID NOT NULL REFERENCES app_todo.tags (tag_id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE,
     PRIMARY KEY (todo_id, tag_id)
 );
@@ -60,12 +60,26 @@ CREATE POLICY "Users can manage their own projects"
     TO authenticated
     USING ((select auth.uid()) = user_id);
 
+CREATE POLICY "Enable insert for users based on user_id"
+    ON "app_todo"."projects"
+    AS PERMISSIVE
+    FOR INSERT
+    TO public
+    WITH CHECK ((SELECT auth.uid()) = user_id);
+
 CREATE POLICY "Users can manage their own todos"
     ON app_todo.todos
     AS PERMISSIVE
     FOR SELECT
     TO authenticated
     USING ((select auth.uid()) = user_id);
+
+CREATE POLICY "Enable insert for users based on user_id"
+    ON "app_todo"."todos"
+    AS PERMISSIVE
+    FOR INSERT
+    TO public
+    WITH CHECK ((SELECT auth.uid()) = user_id);
 
 CREATE POLICY "Users can manage their own tags"
     ON app_todo.tags
@@ -74,6 +88,14 @@ CREATE POLICY "Users can manage their own tags"
     TO authenticated
     USING ((select auth.uid()) = user_id);
 
+CREATE POLICY "Enable insert for users based on user_id"
+    ON "app_todo"."tags"
+    AS PERMISSIVE
+    FOR INSERT
+    TO public
+    WITH CHECK ((SELECT auth.uid()) = user_id);
+
+
 CREATE POLICY "Users can manage their own todo-tag associations"
     ON app_todo.todo_to_tags
     AS PERMISSIVE
@@ -81,13 +103,12 @@ CREATE POLICY "Users can manage their own todo-tag associations"
     TO authenticated
     USING ((select auth.uid()) = user_id);
 
-CREATE INDEX idx_projects_user_id ON app_todo.projects (user_id);
-CREATE INDEX idx_todos_user_id ON app_todo.todos (user_id);
-CREATE INDEX idx_todos_project_id ON app_todo.todos (project_id);
-CREATE INDEX idx_tags_user_id ON app_todo.tags (user_id);
-CREATE INDEX idx_todo_tags_user_id ON app_todo.todo_to_tags (user_id);
-CREATE INDEX idx_todo_tags_todo_id ON app_todo.todo_to_tags (todo_id);
-CREATE INDEX idx_todo_tags_tag_id ON app_todo.todo_to_tags (tag_id);
+CREATE POLICY "Enable insert for users based on user_id"
+    ON "app_todo"."todo_to_tags"
+    AS PERMISSIVE
+    FOR INSERT
+    TO public
+    WITH CHECK ((SELECT auth.uid()) = user_id);
 
 CREATE OR REPLACE FUNCTION app_todo.update_updated_at_column()
     RETURNS TRIGGER AS
