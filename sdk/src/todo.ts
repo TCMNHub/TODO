@@ -3,7 +3,6 @@ import {User} from "@supabase/supabase-js";
 import {AuthService, ClientService, type ContextProvider} from "@tcmn-hub/auth";
 
 import {Database} from "./database.types";
-import {todo} from "./index";
 
 export type TodoModel = Database["app_todo"]["Tables"]["todos"]["Row"];
 
@@ -61,5 +60,28 @@ export class TodoService {
         }
 
         return data;
+    }
+
+    public async createTodo(projectId: string, title: string, description: string, dueDate: string, statusId: string): Promise<TodoModel> {
+        const client = this.clientService.getClient<Database>("app_todo");
+        const user: User = this.authService.getUser();
+        
+        const {error, data} = await client
+            .from("todos")
+            .insert({
+                user_id: user.id,
+                project_id: projectId,
+                title,
+                description,
+                due_date: dueDate,
+                status_id: statusId 
+            })
+            .select();
+
+        if (error) {
+            throw error;
+        }
+
+        return data[0]!;
     }
 }

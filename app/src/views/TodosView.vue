@@ -6,8 +6,6 @@ import {TodosViewModel} from "@view/TodosView.model";
 import Navbar from "@component/Navbar.vue";
 import Main from "@component/Main.vue";
 
-import TodoTable from "@control/TodoTable.vue";
-
 const vm = useViewModel(TodosViewModel);
 </script>
 
@@ -24,7 +22,20 @@ const vm = useViewModel(TodosViewModel);
                     </h2>
                 </div>
                 <div class="overflow-x-auto">
-                    <TodoTable ref="todo-table" />
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Tags</th>
+                            <th>Created at</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

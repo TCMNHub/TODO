@@ -3,10 +3,11 @@ import {type ActionResult, ViewModel} from "vue-mvvm";
 import {type RouteAdapter, RouterService} from "vue-mvvm/router";
 import {DialogService} from "vue-mvvm/dialog";
 
-import {type ProjectModel, ProjectService} from "@tcmn-hub/todo";
+import {type ProjectModel, ProjectService, type TodoModel} from "@tcmn-hub/todo";
 
 import ProjectView from "@view/ProjectView.vue";
 import {ProjectDialogModel} from "@control/ProjectDialog.model";
+import { TodoDialogModel } from "@control/TodoDialog.model";
 
 export class ProjectViewModel extends ViewModel {
     public static readonly component: Component = ProjectView;
@@ -62,7 +63,18 @@ export class ProjectViewModel extends ViewModel {
     }
 
     public async onNewTaskBtn(): Promise<void> {
+        if (!this.project) {
+            return;
+        }
+        
+        using dialog = this.dialogService.initDialog(TodoDialogModel, this.project, null);
 
+        await dialog.openDialog();
+        const result: ActionResult<TodoModel> = await this.runAction(dialog);
+        if (!result.success) {
+            console.error(result.error);
+            return;
+        }
     }
 
     public async onSeeAllBtn(): Promise<void> {
